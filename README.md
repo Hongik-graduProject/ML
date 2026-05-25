@@ -1,8 +1,31 @@
-# ML
-### 2. 하이브리드 테마 분류 (Two-Step Clustering)
-* **Step 1:** 거시 지표 및 주가 변동성을 이용한 초기 테마 분류.
-* **Step 2:** 분류된 테마 내에서 사업개황 텍스트와 재무 수치를 결합하여 고차원 벡터화 및 시각화.
+## 📂 AI 기반 테마 분류 결과 (AI Automated Theme Labeling)
 
-<img width="780" alt="테마 분류 시각화 결과" src="https://github.com/user-attachments/assets/40073939-8425-4329-99ba-b5367a988036" />
+거시 지표와 공시 데이터(비정형 텍스트), 재무 제표를 결합하여 AI가 생성한 5개의 핵심 테마입니다. 각 테마는 유사한 비즈니스 모델과 시장 변동성을 공유하는 기업군으로 구성되었습니다.
 
-> **시각화 해석:** 거시 경제 지표로 1차 분류된 기업들을 텍스트/재무 벡터로 재투영한 결과입니다. 이를 통해 단순 주가 흐름 외에 실제 사업 유사성에 따른 군집화가 이루어짐을 확인할 수 있습니다.
+| 테마명 (AI Generated) | 구성 종목 (Key Members) | 주요 키워드 (Keywords) |
+| :--- | :--- | :--- |
+| **✨ GLOBAL CDMO & SET ✨** | 삼성전자, SK하이닉스, 삼성바이오로직스, 셀트리온, NAVER, 카카오 등 | CDMO, SET, USA, MATERIAL |
+| **✨ GLOBAL LG & INFRASTRUCTURE ✨** | LG에너지솔루션, 삼성SDI, LG화학, SK이노베이션, HD현대중공업 | LG, SK, ESS, ISO |
+| **✨ GLOBAL EV & LCD ✨** | 현대자동차, 기아, POSCO홀딩스, 현대모비스, LG전자, LG디스플레이 | EV, LCD, OLED, STEEL |
+| **✨ GLOBAL EPC & ENGINEERING ✨** | 한화오션, 한국전력, 두산에너빌리티 | EPC, ENGINEERING, SMR, CONSTRUCTION |
+| **✨ SPECIALIZED SECTOR ✨** | 한화에어로스페이스 | UTILITY |
+
+---
+
+## 📊 데이터 시각화 분석 (Data Visualization)
+
+DART 공시 데이터와 재무 데이터를 벡터화하여 각 테마별 군집 정도를 시각화한 결과입니다. 거시적 지표로 분류되지 않던 기업 간의 관계를 텍스트 및 재무 데이터를 통해 정교하게 재분류하였습니다.
+
+<p align="center">
+  <img width="48%" alt="Theme Visualization 1" src="https://github.com/user-attachments/assets/40073939-8425-4329-99ba-b5367a988036" />
+  <img width="48%" alt="Theme Visualization 2" src="https://github.com/user-attachments/assets/46a34af1-a169-47ae-988d-e4108b9833c7" />
+</p>
+<p align="center">
+  <img width="48%" alt="Theme Visualization 3" src="https://github.com/user-attachments/assets/7efc2394-a2e8-4f50-b110-dd315cb5fe5f" />
+  <img width="48%" alt="Theme Visualization 4" src="https://github.com/user-attachments/assets/f9460550-f0c5-4a44-8e70-8e818a08a0cc" />
+</p>
+
+> **💡 시각화 인사이트**
+> 1. **하이브리드 데이터 활용:** 거시 지표(주가 변동)와 정적 데이터(공시 텍스트/재무)를 결합하여 기업의 본질적인 비즈니스 유사성을 포착했습니다.
+> 2. **군집의 명확성:** 텍스트 벡터 주입 후, 단순 산업 분류를 넘어선 테마별 경향성이 뚜렷하게 나타남을 확인하였습니다.
+> 3. **향후 활용:** 본 분류 모델은 실시간 공시 데이터 발생 시 테마별 변동성을 반영한 주가 예측 모델의 기반으로 활용됩니다.
