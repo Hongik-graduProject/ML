@@ -1,3 +1,53 @@
+### 🛠 다시 복사해서 붙여넣을 코드 (검증됨)
+
+```mermaid
+graph TD
+    subgraph Data_Collection
+        A[DART API: 공시/재무]
+        B[FinanceDataReader: 주가/거시지표]
+    end
+
+    subgraph Preprocessing
+        C{금융권 제외 필터링}
+        D[재무/텍스트 벡터화]
+    end
+
+    subgraph Modeling
+        E[1차: 거시지표 군집화]
+        F[2차: 하이브리드 정밀 분류]
+        G[AI 테마 라벨링]
+        H[주가 예측 모델]
+    end
+
+    A --> C
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+
+
+### 🔍 단계별 상세 설계
+
+1. **Data Collection & Filtering**:
+   - DART API를 통해 상위 25개 기업의 재무제표 및 비정형 사업개황 데이터를 추출합니다.
+   - 분석의 일관성을 위해 계정 과목 체계가 다른 은행/금융 기업을 데이터셋에서 분리하였습니다.
+
+2. **Multi-Modal Vectorization**:
+   - **Numerical Vector**: 재무 수치와 거시 경제 지표를 정규화하여 수치적 특징을 추출합니다.
+   - **Textual Vector**: NLP 기술을 사용하여 사업개황 텍스트를 고차원 벡터로 변환, 기업의 실질적인 사업 도메인 유사성을 반영합니다.
+
+3. **Hybrid Clustering (Two-Step)**:
+   - 거시 지표로 시장 내 거동이 유사한 그룹을 1차 선별한 뒤, 정적 데이터(재무/텍스트)를 결합하여 테마의 경계선을 정밀하게 조정합니다.
+   - 최종적으로 LLM 기반의 라벨링을 통해 각 테마의 정체성을 정의합니다.
+
+4. **Prediction Strategy**:
+   - 정적 데이터로 분류된 '테마 경향성'을 사전 지식(Prior Knowledge)으로 활용하여, 신규 공시 발생 시 주가에 미칠 충격과 방향성을 예측합니다.
+
+
+
+
 ## 📂 AI 기반 테마 분류 결과 (AI Automated Theme Labeling)
 
 거시 지표와 공시 데이터(비정형 텍스트), 재무 제표를 결합하여 AI가 생성한 5개의 핵심 테마입니다. 각 테마는 유사한 비즈니스 모델과 시장 변동성을 공유하는 기업군으로 구성되었습니다.
