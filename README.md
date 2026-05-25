@@ -1,33 +1,3 @@
-### 🛠 다시 복사해서 붙여넣을 코드 (검증됨)
-
-```mermaid
-graph TD
-    subgraph Data_Collection
-        A[DART API: 공시/재무]
-        B[FinanceDataReader: 주가/거시지표]
-    end
-
-    subgraph Preprocessing
-        C{금융권 제외 필터링}
-        D[재무/텍스트 벡터화]
-    end
-
-    subgraph Modeling
-        E[1차: 거시지표 군집화]
-        F[2차: 하이브리드 정밀 분류]
-        G[AI 테마 라벨링]
-        H[주가 예측 모델]
-    end
-
-    A --> C
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-
-
 ### 🔍 단계별 상세 설계
 
 1. **Data Collection & Filtering**:
