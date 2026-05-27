@@ -1,0 +1,79 @@
+---
+- name: Execute ML pipeline remotely
+  hosts: ml_workers
+  become: false
+  gather_facts: true
+
+  vars:
+    pipeline_output_dir: "{{ app_dir }}/results"
+    gcs_results_path: "gs://{{ gcs_bucket }}/results/{{ ansible_date_time.date }}"
+    gcs_models_path: "gs://{{ gcs_bucket }}/models/{{ ansible_date_time.date }}"
+    pipeline_log: "{{ app_dir }}/logs/pipeline_{{ ansible_date_time.epoch }}.log"
+
+  pre_tasks:
+    - name: Display pipeline execution target
+      ansible.builtin.debug:
+        msg: "Running ML pipeline on {{ inventory_hostname }} — output: {{ pipeline_output_dir }}"
+
+    - name: Ensure output directories exist
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0755"
+      loop:
+        - "{{ pipeline_output_dir }}"
+        - "{{ app_dir }}/logs"
+
+    - name: Load .env for validation
+      ansible.builtin.stat:
+        path: "{{ app_dir }}/.env"
+      register: env_file_stat
+
+    - name: Abort if .env is missing
+      ansible.builtin.fail:
+        msg: ".env file not found at {{ app_dir }}/.env — run setup.yml first"
+      when: not env_file_stat.stat.exists
+
+  tasks:
+    - name: Run ML pipeline (main.py)
+      ansible.builtin.shell:
+        cmd: |
+          set -e
+          source {{ app_dir }}/.env 2>/dev/null || true
+          source {{ venv_dir }}/bin/activate
+          cd {{ app_dir }}
+          python main.py --output-dir results/ 2>&1 | tee {{ pipeline_log }}
+        executable: /bin/bash
+      register: pipeline_result
+      async: 7200
+      poll: 60
+
+    - name: Display pipeline exit status
+      ansible.builtin.debug:
+        msg: "Pipeline finished with return code {{ pipeline_result.rc }}"
+
+    - name: Upload results to GCS
+      ansible.builtin.shell:
+        cmd: >
+          gsutil -m cp -r {{ pipeline_output_dir }}/*
+          {{ gcs_results_path }}/
+        executable: /bin/bash
+      register: gcs_upload_result
+      changed_when: gcs_upload_result.rc == 0
+      failed_when: gcs_upload_result.rc != 0
+
+    - name: Upload pipeline log to GCS
+      ansible.builtin.shell:
+        cmd: >
+          gsutil cp {{ pipeline_log }}
+          {{ gcs_results_path }}/logs/
+        executable: /bin/bash
+      changed_when: true
+      ignore_errors: true
+
+  post_tasks:
+    - name: Display pipeline completion summary
+      ansible.builtin.debug:
+        msg: >
+          Pipeline execution complete on {{ inventory_hostname }}.
+          Results uploaded to {{ gcs_results_path }}.

@@ -1,0 +1,87 @@
+---
+- name: Install PostgreSQL client and psycopg2
+  ansible.builtin.apt:
+    name:
+      - postgresql-client
+      - libpq-dev
+      - python3-dev
+    state: present
+    update_cache: true
+
+- name: Install psycopg2-binary via pip
+  ansible.builtin.pip:
+    name: psycopg2-binary
+    executable: pip3
+    state: present
+
+- name: Create directory for Cloud SQL Auth Proxy
+  ansible.builtin.file:
+    path: /usr/local/bin
+    state: directory
+    mode: "0755"
+
+- name: Download Cloud SQL Auth Proxy binary
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.9.0/cloud-sql-proxy.linux.amd64
+    dest: /usr/local/bin/cloud-sql-proxy
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Create cloud-sql-proxy system user
+  ansible.builtin.user:
+    name: cloud-sql-proxy
+    system: true
+    shell: /usr/sbin/nologin
+    home: /var/lib/cloud-sql-proxy
+    create_home: true
+
+- name: Create cloud-sql-proxy socket directory
+  ansible.builtin.file:
+    path: /var/run/cloud-sql-proxy
+    state: directory
+    owner: cloud-sql-proxy
+    group: cloud-sql-proxy
+    mode: "0750"
+
+- name: Create Cloud SQL Auth Proxy systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/cloud-sql-proxy.service
+    mode: "0644"
+    content: |
+      [Unit]
+      Description=Google Cloud SQL Auth Proxy
+      After=network.target
+      Wants=network-online.target
+
+      [Service]
+      Type=simple
+      User=cloud-sql-proxy
+      Group=cloud-sql-proxy
+      ExecStart=/usr/local/bin/cloud-sql-proxy \
+        --unix-socket /var/run/cloud-sql-proxy \
+        {{ cloud_sql_instance }}
+      Restart=always
+      RestartSec=5
+      StandardOutput=journal
+      StandardError=journal
+      SyslogIdentifier=cloud-sql-proxy
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable and start Cloud SQL Auth Proxy service
+  ansible.builtin.systemd:
+    name: cloud-sql-proxy
+    state: started
+    enabled: true
+
+- name: Verify Cloud SQL Auth Proxy socket exists
+  ansible.builtin.wait_for:
+    path: /var/run/cloud-sql-proxy/{{ cloud_sql_instance | regex_replace(':', '/') }}.s.PGSQL.5432
+    timeout: 30
+  ignore_errors: true

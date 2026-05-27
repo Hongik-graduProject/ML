@@ -31,6 +31,18 @@ env/
 .env
 .env.*
 
+# Terraform
+infra/terraform/.terraform/
+infra/terraform/*.tfstate
+infra/terraform/*.tfstate.backup
+infra/terraform/*.tfplan
+infra/terraform/terraform.tfvars
+infra/terraform/.terraform.lock.hcl
+
+# Ansible
+infra/ansible/inventory/tf_output.json
+*.retry
+
 # OS
 .DS_Store
 Thumbs.db
