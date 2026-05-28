@@ -41,3 +41,33 @@
 오차 분석: 실제 수익률과의 차이(RMSE)를 분석하여 모델의 신뢰도를 평가합니다.
 
 Top Pick 추출: 예측 수익률이 가장 높은 상위 종목 리스트를 생성하여 투자 전략에 활용합니다.
+
+**🚀 Phase 2: 매크로 유전자 기반 테마 분류 엔진 (2014-2023)이 단계에서는 단순히 업종별(IT, 금융 등)로 기업을 나누는 것이 아니라, 거시경제 지표(금리, 환율, 유가, 금)에 반응하는 기업별 '매크로 유전자'를 추출하여 8개의 동적 테마로 분류합니다.**
+
+
+1. 분석 목적매크로 민감도 수치화: 각 기업의 주가가 거시경제 변수에 얼마나 민감하게 반응하는지 상관계수로 산출합니다.동적 테마 구축: 고정된 섹터가 아닌, 매년 변화하는 경제 환경 속에서 실제로 같이 움직이는 기업군을 포착합니다.3차 예측 가중치 생성: 향후 AI 주가 예측 모델이 참고할 지표별 중요도(Feature Weight)를 DB화합니다
+우리가 사용하는 코드(price.corr(macro_df))는 내부적으로 피어슨 상관계수 공식을 사용합니다.$$r = \frac{\sum (X - \bar{X})(Y - \bar{Y})}{\sqrt{\sum (X - \bar{X})^2 \sum (Y - \bar{Y})^2}}$$
+
+2.   핵심 알고리즘 및 프로세스데이터 정밀화 (Weekly Data): 월간 데이터의 노이즈를 줄이기 위해 주간 수익률 단위로 분석하여 1년당 약 52개의 데이터 포인트를 확보합니다.유전자 추출 (Sensitivity Analysis): 4대 매크로 지표($Interest, FX, Oil, Gold$)와 개별 종목 주가 간의 상관계수를 계산하여 기업별 '민감도 벡터'를 생성합니다.군집화 (K-Means Clustering): 생성된 민감도 벡터를 바탕으로 거시경제 반응 체계가 가장 유사한 기업들을 8개 테마로 묶습니다.표준 가중치 확정 (Intelligence): 각 테마에 속한 기업들의 평균 수치를 계산하여, 해당 테마의 '대표 매크로 유전자'를 확정합니다
+3.   **생성되는 결과물 (3차 파이프라인 입력값)company_yearly_sensitivities.csv: 기업별 연도별 매크로 반응도 (Raw Data)theme_yearly_weights.csv: 테마별 표준 가중치 (AI 모델의 직접적 가중치로 활용)company_theme_mapping.csv: 기업별 연도별 테마 소속 기록**
+
+<img width="572" height="246" alt="Image" src="https://github.com/user-attachments/assets/3592fade-abae-4a29-aa5d-9444c1c07a56" />
+
+<img width="588" height="411" alt="Image" src="https://github.com/user-attachments/assets/a461e0dc-3602-4710-af64-b08fc3abbe9e" />
+
+<img width="589" height="279" alt="Image" src="https://github.com/user-attachments/assets/a82dd566-8e05-4ce9-b914-d77c5bdbee4e" />
+
+<img width="598" height="403" alt="Image" src="https://github.com/user-attachments/assets/c2f64ab9-7ddc-4abf-8e9f-aa4b60e3a0db" />
+
+
+XGBoost (Extreme Gradient Boosting)
+
+Training Strategy: Sliding Window 과거의 데이터가 현재의 시장 질서를 대변하지 못하는 주식 시장의 특성을 반영하여 '슬라이딩 윈도우' 방식을 채택했습니다.
+
+Window Structure: 3-Year Training → 1-Year Prediction
+
+Learning Process: 1. 2014-2016년 데이터를 학습하여 2017년을 예측 및 검증합니다. 2. 윈도우를 1년 뒤로 밀어 2015-2017년 데이터를 학습하고 2018년을 예측합니다. 3. 이 과정을 반복하여 모델이 최신 시장 트렌드(예: 고금리 국면, 팬데믹 등)를 지속적으로 업데이트하도록 설계되었습니다.
+
+<img width="596" height="504" alt="Image" src="https://github.com/user-attachments/assets/c3c592fd-cf98-4222-844f-f9b4f03c2a9c" />
+
+<img width="524" height="327" alt="Image" src="https://github.com/user-attachments/assets/70f7a3f8-e401-47b3-994d-cbf5634b2479" />
