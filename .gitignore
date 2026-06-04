@@ -46,3 +46,13 @@ infra/ansible/inventory/tf_output.json
 # OS
 .DS_Store
 Thumbs.db
+
+# Dataset
+kospi200_train_dataset_2014_2025.csv
+streamlit_dashboard/data/*.csv
+
+# Python / Streamlit
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
