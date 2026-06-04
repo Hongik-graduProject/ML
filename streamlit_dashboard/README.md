@@ -7,6 +7,7 @@
 ```bash
 cd ~/Downloads/kospi200_ai_dashboard_safe
 python -m venv .venv
+**command not found: python 라면 python3 또는 /opt/homebrew/bin/python3.12**
 source .venv/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
