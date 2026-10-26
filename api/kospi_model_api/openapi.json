@@ -1,0 +1,1039 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "KOSPI DART ML API",
+    "description": "KOSPI 전체 기업 DART·가격·Macro DNA 기반 60거래일 KOSPI 대비 초과수익률 예측 API",
+    "version": "2.4.0"
+  },
+  "paths": {
+    "/api/v1/model/info": {
+      "get": {
+        "tags": [
+          "model"
+        ],
+        "summary": "Model Info",
+        "operationId": "model_info_api_v1_model_info_get",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelInfo"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/predictions/latest": {
+      "get": {
+        "tags": [
+          "predictions"
+        ],
+        "summary": "Latest Predictions",
+        "operationId": "latest_predictions_api_v1_predictions_latest_get",
+        "parameters": [
+          {
+            "name": "signal",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Signal"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Signal"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 40
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Search"
+            }
+          },
+          {
+            "name": "min_agreement",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "maximum": 1.0,
+                  "minimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Min Agreement"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/PredictionSort",
+              "default": "percentile"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/predictions/{code}": {
+      "get": {
+        "tags": [
+          "predictions"
+        ],
+        "summary": "Prediction By Code",
+        "operationId": "prediction_by_code_api_v1_predictions__code__get",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          },
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LatestPredictionItem"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/predict": {
+      "post": {
+        "tags": [
+          "inference"
+        ],
+        "summary": "Predict One",
+        "operationId": "predict_one_api_v1_predict_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeaturePredictionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InferencePrediction"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/predict/batch": {
+      "post": {
+        "tags": [
+          "inference"
+        ],
+        "summary": "Predict Batch",
+        "operationId": "predict_batch_api_v1_predict_batch_post",
+        "parameters": [
+          {
+            "name": "x-api-key",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchPredictionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPredictionResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/live": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Live",
+        "operationId": "health_live_health_live_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health Ready",
+        "operationId": "health_ready_health_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchPredictionRequest": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FeaturePredictionRequest"
+            },
+            "type": "array",
+            "minItems": 1,
+            "title": "Items"
+          },
+          "percentile_scope": {
+            "type": "string",
+            "pattern": "^(batch|latest_reference)$",
+            "title": "Percentile Scope",
+            "description": "batch: 요청 내 상대순위, latest_reference: 최신 저장 예측분포 대비 순위",
+            "default": "batch"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "BatchPredictionRequest"
+      },
+      "BatchPredictionResponse": {
+        "properties": {
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "percentile_scope": {
+            "type": "string",
+            "title": "Percentile Scope"
+          },
+          "count": {
+            "type": "integer",
+            "title": "Count"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/InferencePrediction"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "model_version",
+          "percentile_scope",
+          "count",
+          "items"
+        ],
+        "title": "BatchPredictionResponse"
+      },
+      "FeaturePredictionRequest": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "6자리 종목코드",
+            "examples": [
+              "005930"
+            ]
+          },
+          "as_of_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of Date",
+            "description": "Feature 기준일"
+          },
+          "close": {
+            "anyOf": [
+              {
+                "type": "number",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Close",
+            "description": "시나리오 가격 계산용 현재가"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "features": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Features",
+            "description": "feature_schema_v24.json에 정의된 31개 Feature"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "features"
+        ],
+        "title": "FeaturePredictionRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "api_version": {
+            "type": "string",
+            "title": "Api Version"
+          },
+          "model_loaded": {
+            "type": "boolean",
+            "title": "Model Loaded"
+          },
+          "predictions_loaded": {
+            "type": "boolean",
+            "title": "Predictions Loaded"
+          },
+          "detail": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Detail"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "api_version",
+          "model_loaded",
+          "predictions_loaded"
+        ],
+        "title": "HealthResponse"
+      },
+      "InferencePrediction": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "as_of_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "As Of Date"
+          },
+          "predicted_excess_log_return_60d": {
+            "type": "number",
+            "title": "Predicted Excess Log Return 60D"
+          },
+          "predicted_excess_return_60d": {
+            "type": "number",
+            "title": "Predicted Excess Return 60D"
+          },
+          "predicted_percentile": {
+            "type": "number",
+            "title": "Predicted Percentile"
+          },
+          "signal": {
+            "$ref": "#/components/schemas/Signal"
+          },
+          "model_agreement_score": {
+            "type": "number",
+            "title": "Model Agreement Score"
+          },
+          "model_disagreement": {
+            "type": "number",
+            "title": "Model Disagreement"
+          },
+          "ridge_prediction": {
+            "type": "number",
+            "title": "Ridge Prediction"
+          },
+          "xgb_prediction": {
+            "type": "number",
+            "title": "Xgb Prediction"
+          },
+          "feature_coverage": {
+            "type": "number",
+            "title": "Feature Coverage"
+          },
+          "missing_features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Features"
+          },
+          "scenario_price_if_kospi_flat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Price If Kospi Flat"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "name",
+          "as_of_date",
+          "predicted_excess_log_return_60d",
+          "predicted_excess_return_60d",
+          "predicted_percentile",
+          "signal",
+          "model_agreement_score",
+          "model_disagreement",
+          "ridge_prediction",
+          "xgb_prediction",
+          "feature_coverage",
+          "missing_features",
+          "scenario_price_if_kospi_flat"
+        ],
+        "title": "InferencePrediction"
+      },
+      "LatestPredictionItem": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date",
+            "title": "Date"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "sector": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sector"
+          },
+          "close": {
+            "type": "number",
+            "title": "Close"
+          },
+          "predicted_excess_return_60d": {
+            "type": "number",
+            "title": "Predicted Excess Return 60D"
+          },
+          "predicted_percentile": {
+            "type": "number",
+            "title": "Predicted Percentile"
+          },
+          "signal": {
+            "$ref": "#/components/schemas/Signal"
+          },
+          "model_agreement_score": {
+            "type": "number",
+            "title": "Model Agreement Score"
+          },
+          "model_disagreement": {
+            "type": "number",
+            "title": "Model Disagreement"
+          },
+          "scenario_price_if_kospi_flat": {
+            "type": "number",
+            "title": "Scenario Price If Kospi Flat"
+          },
+          "avg_trading_value_20": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Trading Value 20"
+          },
+          "feature_coverage": {
+            "type": "number",
+            "title": "Feature Coverage"
+          },
+          "disclosure_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disclosure Date"
+          },
+          "financial_age_days": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Financial Age Days"
+          },
+          "financial_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Financial Source"
+          },
+          "macro_as_of_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Macro As Of Date"
+          },
+          "dna_age_days": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dna Age Days"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "date",
+          "code",
+          "name",
+          "sector",
+          "close",
+          "predicted_excess_return_60d",
+          "predicted_percentile",
+          "signal",
+          "model_agreement_score",
+          "model_disagreement",
+          "scenario_price_if_kospi_flat",
+          "avg_trading_value_20",
+          "feature_coverage",
+          "disclosure_date",
+          "financial_age_days",
+          "financial_source",
+          "macro_as_of_date",
+          "dna_age_days"
+        ],
+        "title": "LatestPredictionItem"
+      },
+      "ModelInfo": {
+        "properties": {
+          "api_version": {
+            "type": "string",
+            "title": "Api Version"
+          },
+          "model_version": {
+            "type": "string",
+            "title": "Model Version"
+          },
+          "bundle_metadata_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bundle Metadata Version"
+          },
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "target_definition": {
+            "type": "string",
+            "title": "Target Definition"
+          },
+          "feature_count": {
+            "type": "integer",
+            "title": "Feature Count"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Features"
+          },
+          "ensemble_xgb_weight": {
+            "type": "number",
+            "title": "Ensemble Xgb Weight"
+          },
+          "target_clip": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Target Clip"
+          },
+          "latest_prediction_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Latest Prediction Date"
+          },
+          "latest_prediction_count": {
+            "type": "integer",
+            "title": "Latest Prediction Count"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Notes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "api_version",
+          "model_version",
+          "bundle_metadata_version",
+          "target",
+          "target_definition",
+          "feature_count",
+          "features",
+          "ensemble_xgb_weight",
+          "target_clip",
+          "latest_prediction_date",
+          "latest_prediction_count",
+          "notes"
+        ],
+        "title": "ModelInfo"
+      },
+      "PredictionPage": {
+        "properties": {
+          "as_of_date": {
+            "type": "string",
+            "format": "date",
+            "title": "As Of Date"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LatestPredictionItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "as_of_date",
+          "total",
+          "offset",
+          "limit",
+          "items"
+        ],
+        "title": "PredictionPage"
+      },
+      "PredictionSort": {
+        "type": "string",
+        "enum": [
+          "percentile",
+          "expected_return",
+          "agreement"
+        ],
+        "title": "PredictionSort"
+      },
+      "Signal": {
+        "type": "string",
+        "enum": [
+          "Bottom 10%",
+          "Below Average",
+          "Neutral",
+          "Above Average",
+          "Top 10%"
+        ],
+        "title": "Signal"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
