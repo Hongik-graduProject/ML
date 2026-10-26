@@ -1,41 +1,125 @@
-<html><head></head><body><h1 data-path-to-node="3" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🏗️ Model Pipeline: From Raw Data to Prediction</h1><blockquote data-path-to-node="4" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="4,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="4,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">본 모델은 매크로 경제 지표와 기업의 재무 건전성을 결합하여 미래 수익률을 예측하는 5단계 파이프라인을 따릅니다.</b></p></blockquote><h3 data-path-to-node="6" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🟢 1단계: 데이터 통합 (Data Ingestion)</h3><p data-path-to-node="7" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="7" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">"흩어진 데이터를 하나의 데이터셋으로 결합합니다."</b></p><ul data-path-to-node="8" style="padding-inline-start: 32px; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="8,0,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="8,0,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">금융 지표:</b> KRX 금리, 환율, 유가, 금 시세 (Macro Data)</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="8,1,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="8,1,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">재무 DNA:</b> KOSPI 200 기업의 ROE, 영업이익, 부채비율 (Financial Data)</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="8,2,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="8,2,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">데이터 정렬:</b> <code data-path-to-node="8,2,0" data-index-in-node="8" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">날짜(Year)</code>와 <code data-path-to-node="8,2,0" data-index-in-node="18" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">종목코드(Code)</code>를 기준으로 병합(Merge) 및 결측치 전처리</p></li></ul><h3 data-path-to-node="9" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🟡 2단계: 피처 엔지니어링 (Feature Engineering)</h3><p data-path-to-node="10" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="10" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">"단순 수치를 넘어 시장의 '모멘텀'과 '민감도'를 추출합니다."</b></p>
-구분 | 내용 | 주요 변수
--- | -- | --
-State | 현재 기업의 재무 상태 수치 | ROE, OP_Margin 등
-Momentum | 전년 대비 실적 개선 에너지 | roe_diff, op_income_diff
-Sensitivity | 거시 경제 변화에 대한 반응도 | Correlation (금리, 환율 등)
+# KOSPI DART ML API V2.4
 
-<h3 data-path-to-node="12" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🔵 3단계: 슬라이딩 윈도우 학습 (Sliding Window)</h3><p data-path-to-node="13" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="13" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">"고정된 과거에 머물지 않고 최신 시장 트렌드를 반영합니다."</b></p><ul data-path-to-node="14" style="padding-inline-start: 32px; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="14,0,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="14,0,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">학습(Train):</b> 과거 <b data-path-to-node="14,0,0" data-index-in-node="14" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">3개년</b> 데이터를 통한 패턴 학습</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="14,1,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="14,1,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">검증(Test):</b> 직후 <b data-path-to-node="14,1,0" data-index-in-node="13" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">1개년</b> 데이터를 통한 예측력 테스트</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="14,2,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="14,2,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">롤링(Rolling):</b> 1년씩 윈도우를 이동하며 팬데믹, 고금리 등 <b data-path-to-node="14,2,0" data-index-in-node="38" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">특수 국면을 스스로 학습</b></p></li></ul><h3 data-path-to-node="15" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🟠 4단계: XGBoost 모델 추론 (Inference)</h3><p data-path-to-node="16" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="16" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">"복잡한 비선형 관계를 파악하고 핵심 동인을 분석합니다."</b></p><ul data-path-to-node="17" style="padding-inline-start: 32px; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="17,0,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="17,0,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">비선형 분석:</b> 금리 변동이 개별 기업에 미치는 복잡한 영향력을 트리 기반 알고리즘으로 해석</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="17,1,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="17,1,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">Key Driver 추출:</b> 매 연도별 주가에 가장 큰 영향을 준 변수(매크로 vs 재무)의 중요도 산출</p></li></ul><h3 data-path-to-node="18" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">🔴 5단계: 성과 평가 및 종목 추출 (Evaluation)</h3><p data-path-to-node="19" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="19" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">"데이터를 기반으로 최적의 투자 대상을 선정합니다."</b></p><ol start="1" data-path-to-node="20" style="padding-inline-start: 32px; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="20,0,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="20,0,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">수익률 예측:</b> 3개월(60일) 뒤 예상 누적 수익률 산출</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="20,1,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="20,1,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">신뢰도 검증:</b> 실제 수익률과 비교하여 <code data-path-to-node="20,1,0" data-index-in-node="21" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">RMSE</code> 오차 분석</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="20,2,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="20,2,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">Top Pick:</b> 예측 수익률 상위 10개 종목을 최종 투자 리스트로 추출</p></li></ol><h3 data-path-to-node="22" style="font-family: &quot;Google Sans&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">💡 Pipeline Summary</h3><ul data-path-to-node="23" style="padding-inline-start: 32px; font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="23,0,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="23,0,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">입력(Input):</b> 매크로 지표 + 재무제표</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="23,1,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="23,1,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">엔진(Engine):</b> Sliding Window + XGBoost</p></li><li style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><p data-path-to-node="23,2,0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;"><b data-path-to-node="23,2,0" data-index-in-node="0" style="font-family: &quot;Google Sans Text&quot;, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important;">출력(Output):</b> 60일 뒤 기대 수익률 Top 10 리스트</p></li></ul></body></html>
+KOSPI 전체 기업의 DART 재무정보, 가격 Feature, Macro DNA를 이용하여 향후
+60거래일 KOSPI 대비 초과수익률을 제공하는 FastAPI 서비스입니다.
 
+## 제공 기능
 
+- Colab에서 미리 계산한 최신 664개 종목 예측 조회
+- 종목코드·이름·Signal 검색 및 정렬
+- 저장된 Ridge/XGBoost ensemble을 이용한 단건·배치 추론
+- 31개 Feature 순서, Target, 모델 버전 조회
+- artifact 시작 검증과 readiness/liveness health check
+- 선택형 `X-API-Key` 인증, CORS 환경변수, Docker 실행
 
-**🚀 Phase 2: 매크로 유전자 기반 테마 분류 엔진 (2014-2023)이 단계에서는 단순히 업종별(IT, 금융 등)로 기업을 나누는 것이 아니라, 거시경제 지표(금리, 환율, 유가, 금)에 반응하는 기업별 '매크로 유전자'를 추출하여 8개의 동적 테마로 분류합니다.**
+## API 구조
 
+| Method | Path | 설명 |
+|---|---|---|
+| GET | `/health/live` | 프로세스 생존 확인 |
+| GET | `/health/ready` | 모델·최신 예측 로드 확인 |
+| GET | `/api/v1/model/info` | Feature 목록과 모델 메타데이터 |
+| GET | `/api/v1/predictions/latest` | 최신 예측 목록·필터·페이지네이션 |
+| GET | `/api/v1/predictions/{code}` | 종목코드별 최신 예측 |
+| POST | `/api/v1/predict` | 31개 Feature 단건 추론 |
+| POST | `/api/v1/predict/batch` | 최대 500건 배치 추론 |
 
-1. 분석 목적매크로 민감도 수치화: 각 기업의 주가가 거시경제 변수에 얼마나 민감하게 반응하는지 상관계수로 산출합니다.동적 테마 구축: 고정된 섹터가 아닌, 매년 변화하는 경제 환경 속에서 실제로 같이 움직이는 기업군을 포착합니다.3차 예측 가중치 생성: 향후 AI 주가 예측 모델이 참고할 지표별 중요도(Feature Weight)를 DB화합니다
-우리가 사용하는 코드(price.corr(macro_df))는 내부적으로 피어슨 상관계수 공식을 사용합니다.$$r = \frac{\sum (X - \bar{X})(Y - \bar{Y})}{\sqrt{\sum (X - \bar{X})^2 \sum (Y - \bar{Y})^2}}$$
+Swagger UI는 `/docs`, ReDoc은 `/redoc`, OpenAPI JSON은 `/openapi.json`입니다.
 
-2.   핵심 알고리즘 및 프로세스데이터 정밀화 (Weekly Data): 월간 데이터의 노이즈를 줄이기 위해 주간 수익률 단위로 분석하여 1년당 약 52개의 데이터 포인트를 확보합니다.유전자 추출 (Sensitivity Analysis): 4대 매크로 지표($Interest, FX, Oil, Gold$)와 개별 종목 주가 간의 상관계수를 계산하여 기업별 '민감도 벡터'를 생성합니다.군집화 (K-Means Clustering): 생성된 민감도 벡터를 바탕으로 거시경제 반응 체계가 가장 유사한 기업들을 8개 테마로 묶습니다.표준 가중치 확정 (Intelligence): 각 테마에 속한 기업들의 평균 수치를 계산하여, 해당 테마의 '대표 매크로 유전자'를 확정합니다
-3.   **생성되는 결과물 (3차 파이프라인 입력값)company_yearly_sensitivities.csv: 기업별 연도별 매크로 반응도 (Raw Data)theme_yearly_weights.csv: 테마별 표준 가중치 (AI 모델의 직접적 가중치로 활용)company_theme_mapping.csv: 기업별 연도별 테마 소속 기록**
+## 1. Colab에서 artifact 내보내기
 
+V2.4 노트북을 마지막 셀까지 실행한 뒤 `scripts/export_api_artifacts.py` 내용을
+Colab 셀에서 실행합니다. 생성된 `kospi_api_artifacts_v24.zip`의 파일을 이 프로젝트의
+`artifacts/` 폴더에 넣습니다.
 
-<img width="572" height="246" alt="Image" src="https://github.com/user-attachments/assets/3592fade-abae-4a29-aa5d-9444c1c07a56" />
+필수 파일은 다음 네 개입니다.
 
-<img width="588" height="411" alt="Image" src="https://github.com/user-attachments/assets/a461e0dc-3602-4710-af64-b08fc3abbe9e" />
+```text
+artifacts/
+├── ensemble_pipeline_v24.joblib
+├── latest_kospi_predictions_v24.csv
+├── feature_schema_v24.json
+└── data_manifest_v24.json
+```
 
-<img width="589" height="279" alt="Image" src="https://github.com/user-attachments/assets/a82dd566-8e05-4ce9-b914-d77c5bdbee4e" />
+## 2. 로컬 실행
 
-<img width="598" height="403" alt="Image" src="https://github.com/user-attachments/assets/c2f64ab9-7ddc-4abf-8e9f-aa4b60e3a0db" />
+```bash
+python -m venv .venv
+source .venv/bin/activate       # Windows: .venv\Scripts\activate
+pip install -r requirements-dev.txt
+cp .env.example .env
+PYTHONPATH=. python scripts/validate_artifacts.py
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
 
+## 3. Docker 실행
 
-XGBoost (Extreme Gradient Boosting)
+```bash
+cp .env.example .env
+docker compose up --build -d
+curl http://localhost:8000/health/ready
+```
 
-Training Strategy: Sliding Window 과거의 데이터가 현재의 시장 질서를 대변하지 못하는 주식 시장의 특성을 반영하여 '슬라이딩 윈도우' 방식을 채택했습니다.
+운영환경에서는 `.env`의 `KOSPI_API_API_KEY`를 반드시 임의의 긴 값으로 바꾸고,
+백엔드에서 모든 `/api/v1/*` 요청에 `X-API-Key` 헤더를 넣습니다.
 
-Window Structure: 3-Year Training → 1-Year Prediction
+## 4. 최신 예측 조회 예시
 
-Learning Process: 1. 2014-2016년 데이터를 학습하여 2017년을 예측 및 검증합니다. 2. 윈도우를 1년 뒤로 밀어 2015-2017년 데이터를 학습하고 2018년을 예측합니다. 3. 이 과정을 반복하여 모델이 최신 시장 트렌드(예: 고금리 국면, 팬데믹 등)를 지속적으로 업데이트하도록 설계되었습니다.
+```bash
+curl -H "X-API-Key: $KOSPI_API_API_KEY" \
+  "http://localhost:8000/api/v1/predictions/latest?signal=Top%2010%25&limit=20"
 
-<img width="596" height="504" alt="Image" src="https://github.com/user-attachments/assets/c3c592fd-cf98-4222-844f-f9b4f03c2a9c" />
+curl -H "X-API-Key: $KOSPI_API_API_KEY" \
+  "http://localhost:8000/api/v1/predictions/005930"
+```
 
-<img width="524" height="327" alt="Image" src="https://github.com/user-attachments/assets/70f7a3f8-e401-47b3-994d-cbf5634b2479" />
+응답의 `model_agreement_score`는 성공확률이 아닙니다. 노트북의
+`Confidence_Score`를 오해하지 않도록 API에서는 Ridge와 XGBoost 예측의 일치도
+순위라는 의미의 이름으로 변경했습니다.
+
+V2.4 노트북이 저장한 model bundle 내부에는 레거시 `version: 2.1` 표기가 남아 있을 수
+있습니다. API의 `model_version`은 배포 release인 `2.4.0`을 반환하고, 원본 값은
+`bundle_metadata_version`으로 별도 공개합니다.
+
+## 5. 직접 추론 예시
+
+먼저 `/api/v1/model/info`에서 정확한 Feature 이름과 순서를 확인합니다.
+
+```json
+{
+  "code": "005930",
+  "as_of_date": "2026-10-02",
+  "close": 275500,
+  "name": "삼성전자",
+  "features": {
+    "roe_rank": 0.811665,
+    "roe_diff_rank": 0.703067,
+    "op_margin_rank": 0.854878
+  }
+}
+```
+
+누락 Feature는 학습 pipeline의 median imputer가 처리하지만 전체 31개 중 75% 이상이
+전달되어야 합니다. 원시 재무제표·종가를 `/predict`에 바로 넣으면 안 됩니다.
+노트북과 같은 point-in-time Feature 생성 로직을 별도 batch/feature 서비스에서 실행한
+뒤 API에 전달해야 합니다.
+
+## 6. 버전 호환성
+
+`joblib`은 Python 객체 직렬화이므로 학습 환경과 서빙 환경의 Python,
+scikit-learn, xgboost 버전이 다르면 로드 실패 또는 결과 차이가 날 수 있습니다.
+`runtime_versions_v24.json`의 버전을 확인해 운영 이미지의 버전을 고정하십시오.
+
+## 7. 운영 권장 구조
+
+```text
+[일 1회 Colab/Batch Pipeline]
+  └─ DART·가격·Macro 수집 → Feature 생성 → 모델 학습·최신 예측
+       └─ versioned artifacts 저장
+            └─ API container 재배포/재시작
+                 └─ Backend → Frontend
+```
+
+실시간 HTTP 요청 안에서 DART 전체 수집과 Feature Store 재생성을 실행하지 않습니다.
+수집·학습은 batch로 분리하고 API는 검증된 artifact의 조회·추론만 담당합니다.

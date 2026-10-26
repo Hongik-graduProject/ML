@@ -1,5 +1,0 @@
-.venv/
-__pycache__/
-*.pyc
-.streamlit_uploaded_dataset.csv
-.uploaded_dataset.csv
